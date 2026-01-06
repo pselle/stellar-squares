@@ -41,10 +41,8 @@ jobs:
             echo "stellar-scaffold already installed. Clear cache to force reinstall."
           fi
       - run: npm ci
-      - run: npm run lint
-      - run: npx prettier . --check
       - name: Build with Scaffold and build client packages
-        run: STELLAR_SCAFFOLD_ENV=development stellar-scaffold build --build-clients 2>&1 | tee build_clients.log
+        run: STELLAR_SCAFFOLD_ENV=staging stellar-scaffold build --build-clients 2>&1 | tee build_clients.log
       - name: Check client generation summary
         run: |
           # Extract the number after "Failed: "
@@ -58,6 +56,8 @@ jobs:
             echo "Check the \"Build with Scaffold\" step logs."
             exit 1
           fi
+      - run: npm run lint
+      - run: npx prettier . --check
       - run: npm run install:contracts
       - run: npm run build
       - name: Run tests
