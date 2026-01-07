@@ -8,7 +8,15 @@ run-locally = true # automatically start the local network container, if not alr
 name = "me" # Required. Keys for this account will be saved to `./.stellar/identity`
 
 [development.contracts]
-nft_enumerable_example = { client = true, constructor_args = "--owner me" }
+nft_sequential_minting_example = { client = true, constructor_args = "--owner me --name 'Importantdocs' --uri 'myURI' --symbol 'IDOC'" }
+
+[development.contracts.squares_gallery]
+client = true
+# Update the WASM hash below to match the hash of your built and uploaded contract.
+constructor_args = "--owner me --nft_wasm_hash 3350af9f56ffcc653dbf205fb9dc82e353754af4839da2233532d6ca364b374e"
+after_deploy = """
+initialize_collection
+"""
 
 ### Staging environment configuration
 [staging.network]
