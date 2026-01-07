@@ -1,10 +1,8 @@
 use soroban_sdk::{
-    Address, Bytes, BytesN, Env, String, contract, contractimpl, contracttype, panic_with_error
+    Address, Bytes, BytesN, Env, String, contract, contractimpl, contracttype, contracterror, panic_with_error
 };
 
 use crate::nft::NftClient;
-
-use soroban_sdk::contracterror;
 
 #[contracterror]
 #[derive(Copy, Clone, Debug, Eq, PartialEq, PartialOrd, Ord)]
