@@ -1,8 +1,14 @@
 use soroban_sdk::{
-    Address, Bytes, BytesN, Env, String, contract, contractimpl, contracttype, contracterror, panic_with_error
+    Address, Bytes, BytesN, Env, String, contract, contracterror, contractimpl, contracttype,
+    panic_with_error,
 };
 
 use crate::nft::NftClient;
+
+const BASE_URI: &str =
+    "https://bafybeid5jq6nn6m5tflzz5van67m74rt26c2z3tvowusxgio2qzmtkx6ki.ipfs.w3s.link/";
+const NAME: &str = "Squares Gallery";
+const SYMBOL: &str = "SGAL";
 
 #[contracterror]
 #[derive(Copy, Clone, Debug, Eq, PartialEq, PartialOrd, Ord)]
@@ -43,10 +49,10 @@ impl Contract {
             .deploy_v2(
                 nft_wasm_hash,
                 (
-                    String::from_str(e, "https://example.com/squares/"), // base_uri
-                    String::from_str(e, "Squares Gallery"),              // name
-                    String::from_str(e, "SGAL"),                         // symbol
-                    e.current_contract_address(),                        // owner
+                    String::from_str(e, BASE_URI), // base_uri
+                    String::from_str(e, NAME),     // name
+                    String::from_str(e, SYMBOL),   // symbol
+                    e.current_contract_address(),  // owner
                 ),
             );
         e.storage()
@@ -78,7 +84,7 @@ impl Contract {
         let client = NftClient::new(e, &contract_id);
         // Mint the 20 NFTs of the collection to the gallery contract itself
         for _ in 0..20 {
-            let result  = client.try_mint(&e.current_contract_address());
+            let result = client.try_mint(&e.current_contract_address());
             match result {
                 Ok(_) => (),
                 Err(_) => panic_with_error!(e, Error::MintingFailed),
