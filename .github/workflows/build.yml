@@ -56,9 +56,9 @@ jobs:
             echo "Check the \"Build with Scaffold\" step logs."
             exit 1
           fi
-      - run: npm run lint
-      - run: npx prettier . --check
       - run: npm run install:contracts
       - run: npm run build
+      - run: npm run lint
+      - run: npx prettier . --check
       - name: Run tests
         run: npm test --if-present
