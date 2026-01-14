@@ -18,12 +18,16 @@ const useGetOwner = (tokenId: number) =>
 
 const ArtCard: React.FC<{ tokenId: number }> = ({ tokenId }) => {
   const { data: owner } = useGetOwner(tokenId);
+  const leftPadTokenId = String(tokenId).padStart(2, "0");
 
   return (
     <div className={styles.artCard}>
       <h3>
         art piece #{tokenId}, owned by {owner ?? "Loading..."}
-        <img src="./art/00-squares.png" alt={`art piece #${tokenId}`} />
+        <img
+          src={`./art/${leftPadTokenId}-squares.png`}
+          alt={`art piece #${tokenId}`}
+        />
       </h3>
     </div>
   );

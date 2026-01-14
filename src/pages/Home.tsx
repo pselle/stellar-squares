@@ -19,7 +19,7 @@ const Home: React.FC = () => (
         </div>
 
         <div className={styles.artCardsGrid}>
-          {Array.from(Array(10)).map((_, tokenId) => (
+          {Array.from(Array(20)).map((_, tokenId) => (
             <ArtCard key={`card-${tokenId}`} tokenId={tokenId} />
           ))}
         </div>
