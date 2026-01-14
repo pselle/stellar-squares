@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import squaresGallery from "../contracts/squares_gallery";
 import { Client } from "nft_sequential_minting_example";
 import { rpcUrl, networkPassphrase } from "../contracts/util";
@@ -20,7 +20,7 @@ export const getNftClient = (collectionAddress: string): Client => {
 };
 
 // Cache the collection address permanently (it never changes)
-export const useGetCollectionAddress = () =>
+export const useGetCollectionAddress = (): UseQueryResult<string, Error> =>
   useQuery({
     queryKey: ["collectionAddress"],
     queryFn: async () => {
@@ -35,7 +35,7 @@ export const useGetCollectionAddress = () =>
     enabled: true,
   });
 
-export const useGetGalleryAddress = () =>
+export const useGetGalleryAddress = (): UseQueryResult<string, Error> =>
   useQuery({
     queryKey: ["galleryAddress"],
     queryFn: async () => {
@@ -55,7 +55,7 @@ export const useGetOwner = (
   tokenId: number,
   collectionAddress?: string,
   galleryAddress?: string,
-) =>
+): UseQueryResult<string, Error> =>
   useQuery({
     queryKey: ["nftOwner", { tokenId }],
     queryFn: async () => {
@@ -80,7 +80,10 @@ export const useGetOwner = (
   });
 
 // Hook to get token URI for metadata
-export const useGetTokenUri = (tokenId: number, collectionAddress?: string) =>
+export const useGetTokenUri = (
+  tokenId: number,
+  collectionAddress?: string,
+): UseQueryResult<string | null, Error> =>
   useQuery({
     queryKey: ["tokenUri", { tokenId }],
     queryFn: async () => {

@@ -8,7 +8,6 @@ import styles from "./styles/ArtCard.module.css";
 
 const ArtCard: React.FC<{ tokenId: number }> = ({ tokenId }) => {
   const { data: galleryAddress } = useGetGalleryAddress();
-
   const { data: collectionAddress, isLoading: isLoadingAddress } =
     useGetCollectionAddress();
   const { data: owner, isLoading: isLoadingOwner } = useGetOwner(
