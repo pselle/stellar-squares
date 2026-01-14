@@ -1,0 +1,25 @@
+.artCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  border: 1px solid #e1e5e9;
+  border-radius: 8px;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.artCard h3 {
+  margin: 0;
+  text-align: center;
+  font-size: 14px;
+  color: #333;
+}
+
+.artCard img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+}

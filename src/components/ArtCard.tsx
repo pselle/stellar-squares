@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import nft from "../contracts/nft_enumerable";
+import nft from "../contracts/nft_sequential_minting_example";
+import styles from "./styles/ArtCard.module.css";
 
 const useGetOwner = (tokenId: number) =>
   useQuery({
@@ -9,21 +10,22 @@ const useGetOwner = (tokenId: number) =>
       if (typeof transaction.result === "string") {
         return transaction.result;
       }
-      // Otherwise, the token has no owner
-      return "Unclaimed";
+      // Otherwise, the token has not been minted
+      return "Token not minted";
     },
     enabled: true,
   });
 
 const ArtCard: React.FC<{ tokenId: number }> = ({ tokenId }) => {
-  const owner = useGetOwner(tokenId);
+  const { data: owner } = useGetOwner(tokenId);
 
   return (
-    <>
+    <div className={styles.artCard}>
       <h3>
-        art piece #{tokenId}, owned by {owner.data ?? "Loading..."}
+        art piece #{tokenId}, owned by {owner ?? "Loading..."}
+        <img src="./art/00-squares.png" alt={`art piece #${tokenId}`} />
       </h3>
-    </>
+    </div>
   );
 };
 
