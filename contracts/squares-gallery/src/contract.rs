@@ -1,5 +1,5 @@
 use soroban_sdk::{
-    Address, Bytes, BytesN, Env, String, contract, contracterror, contractimpl, contracttype,
+    Address, BytesN, Env, String, contract, contracterror, contractimpl, contracttype, log,
     panic_with_error,
 };
 
@@ -73,19 +73,19 @@ impl Contract {
             .instance()
             .get(&DataKey::NftWasmHash)
             .expect("nft_wasm_hash should be set");
-        // Return the contract ID
-        let collection_address = e
-            .deployer()
-            .with_current_contract(e.crypto().sha256(&Bytes::new(e)))
-            .deploy_v2(
-                nft_wasm_hash,
-                (
-                    base_uri,
-                    name,
-                    symbol.clone(),
-                    e.current_contract_address(), // owner
-                ),
-            );
+
+        // Generate salt based on the symbol to ensure unique contract address per symbol
+        let salt = e.crypto().sha256(&symbol.to_bytes());
+        let collection_address = e.deployer().with_current_contract(salt).deploy_v2(
+            nft_wasm_hash,
+            (
+                base_uri,
+                name,
+                symbol.clone(),
+                e.current_contract_address(), // owner
+            ),
+        );
+
         e.storage().instance().set(
             &DataKey::CollectionAddress(symbol.clone()),
             &collection_address,
