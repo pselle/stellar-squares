@@ -28,7 +28,8 @@ name = "testnet-user"
 default = true
 
 [staging.contracts]
-nft_enumerable = { id = "CCH4FQ4CTAHFYFKMVKGXEOHR746G2GNQHYNY5GTFPW66A4JEBD2EDAMZ"}
+nft_sequential_minting_example = { id = "CCH4FQ4CTAHFYFKMVKGXEOHR746G2GNQHYNY5GTFPW66A4JEBD2EDAMZ"}
+squares_gallery = { id = "CCH4FQ4CTAHFYFKMVKGXEOHR746G2GNQHYNY5GTFPW66A4JEBD2EDAMZ" } # placeholder ID
 
 ### Production environment configuration
 [production.network]
