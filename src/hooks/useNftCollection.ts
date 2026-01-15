@@ -24,7 +24,9 @@ export const useGetCollectionAddress = (): UseQueryResult<string, Error> =>
   useQuery({
     queryKey: ["collectionAddress"],
     queryFn: async () => {
-      const transaction = await squaresGallery.collection_address();
+      const transaction = await squaresGallery.collection_address({
+        symbol: "SQG",
+      });
       if (typeof transaction.result === "string") {
         return transaction.result;
       }

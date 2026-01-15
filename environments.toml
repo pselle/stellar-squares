@@ -15,7 +15,7 @@ client = true
 # Update the WASM hash below to match the hash of your built and uploaded contract.
 constructor_args = "--owner me --nft_wasm_hash 3350af9f56ffcc653dbf205fb9dc82e353754af4839da2233532d6ca364b374e"
 after_deploy = """
-initialize_collection
+deploy_collection --base_uri "https://example.com/mynft/" --name "Squares Gallery" --symbol "SQG" --collection_size 20
 """
 
 ### Staging environment configuration

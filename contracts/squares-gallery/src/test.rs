@@ -3,12 +3,12 @@
 use crate::contract::{Contract, ContractClient};
 use crate::nft::NftClient;
 use soroban_sdk::testutils::Address as _;
-use soroban_sdk::{Address, BytesN, Env};
+use soroban_sdk::{Address, BytesN, Env, String};
 
 const WASM: &[u8] = include_bytes!("../fixtures/nft_sequential_minting_example.wasm");
 
 #[test]
-fn test() {
+fn test_deploy_collection() {
     let env = Env::default();
     env.mock_all_auths();
 
@@ -18,9 +18,10 @@ fn test() {
     let contract_id = env.register(Contract, (owner, wasm_hash));
     let client = ContractClient::new(&env, &contract_id);
 
-    let nft_address = client.initialize_collection();
+    let nft_address = client.deploy_collection(&String::from_str(&env, "https://example.com/"), &String::from_str(&env, "Squares Gallery"), &String::from_str(&env, "SQG"), &20u32);
     assert!(nft_address.exists());
-    assert!(client.collection_address() == nft_address);
+    // Test collection_address getter
+    assert!(client.collection_address(&String::from_str(&env, "SQG")) == nft_address);
 
     let nft_client = NftClient::new(&env, &nft_address);
 

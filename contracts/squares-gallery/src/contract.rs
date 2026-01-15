@@ -5,24 +5,20 @@ use soroban_sdk::{
 
 use crate::nft::NftClient;
 
-const BASE_URI: &str =
-    "https://bafybeicqgwje7trm27thcwngfhtz2ppadly2zcnxp3ch6plt5fe4ipoacu.ipfs.w3s.link/";
-const NAME: &str = "Squares Gallery";
-const SYMBOL: &str = "SGAL";
-
 #[contracterror]
 #[derive(Copy, Clone, Debug, Eq, PartialEq, PartialOrd, Ord)]
 #[repr(u32)]
 pub enum Error {
     Unauthorized = 1,
     MintingFailed = 2,
+    SymbolAlreadyDeployed = 3,
 }
 
 #[contracttype]
 pub enum DataKey {
     Owner,
     NftWasmHash,
-    CollectionAddress,
+    CollectionAddress(String), // Keyed by collection symbol, which is stored as a String on the NFT contract standard
 }
 
 #[contract]
@@ -35,43 +31,28 @@ impl Contract {
         e.storage()
             .instance()
             .set(&DataKey::NftWasmHash, &nft_wasm_hash);
-
-        let nft_wasm_hash: BytesN<32> = e
-            .storage()
-            .instance()
-            .get(&DataKey::NftWasmHash)
-            .expect("nft_wasm_hash should be set");
-
-        // Return the contract ID
-        let contract_id = e
-            .deployer()
-            .with_current_contract(e.crypto().sha256(&Bytes::new(e)))
-            .deploy_v2(
-                nft_wasm_hash,
-                (
-                    String::from_str(e, BASE_URI), // base_uri
-                    String::from_str(e, NAME),     // name
-                    String::from_str(e, SYMBOL),   // symbol
-                    e.current_contract_address(),  // owner
-                ),
-            );
-        e.storage()
-            .instance()
-            .set(&DataKey::CollectionAddress, &contract_id);
     }
 
-    pub fn collection_address(e: &Env) -> Address {
+    pub fn collection_address(e: &Env, symbol: String) -> Address {
         e.storage()
             .instance()
-            .get(&DataKey::CollectionAddress)
-            .expect("nft should be set")
+            .get(&DataKey::CollectionAddress(symbol))
+            .expect("collection_address not present for symbol")
     }
 
     pub fn gallery_address(e: &Env) -> Address {
         e.current_contract_address()
     }
 
-    pub fn initialize_collection(e: &Env) -> Address {
+    /// Deploys a new NFT collection contract with the given parameters and mints the specified quantity
+    /// of NFTs to the gallery contract itself.
+    pub fn deploy_collection(
+        e: &Env,
+        base_uri: String,
+        name: String,
+        symbol: String,
+        collection_size: u32,
+    ) -> Address {
         let owner: Address = e
             .storage()
             .instance()
@@ -79,17 +60,46 @@ impl Contract {
             .expect("owner should be set");
         owner.require_auth();
 
-        let contract_id: Address = Self::collection_address(e);
+        // Ensure symbol is not already used
+        if e.storage()
+            .instance()
+            .has(&DataKey::CollectionAddress(symbol.clone()))
+        {
+            panic_with_error!(e, Error::SymbolAlreadyDeployed);
+        }
 
-        let client = NftClient::new(e, &contract_id);
-        // Mint the 20 NFTs of the collection to the gallery contract itself
-        for _ in 0..20 {
+        let nft_wasm_hash: BytesN<32> = e
+            .storage()
+            .instance()
+            .get(&DataKey::NftWasmHash)
+            .expect("nft_wasm_hash should be set");
+        // Return the contract ID
+        let collection_address = e
+            .deployer()
+            .with_current_contract(e.crypto().sha256(&Bytes::new(e)))
+            .deploy_v2(
+                nft_wasm_hash,
+                (
+                    base_uri,
+                    name,
+                    symbol.clone(),
+                    e.current_contract_address(), // owner
+                ),
+            );
+        e.storage().instance().set(
+            &DataKey::CollectionAddress(symbol.clone()),
+            &collection_address,
+        );
+
+        let client = NftClient::new(e, &collection_address);
+        // Mint the N number of NFTs of the collection to the gallery contract itself
+        for _ in 0..collection_size {
             let result = client.try_mint(&e.current_contract_address());
             match result {
                 Ok(_) => (),
                 Err(_) => panic_with_error!(e, Error::MintingFailed),
             }
         }
-        contract_id
+        collection_address
     }
 }
