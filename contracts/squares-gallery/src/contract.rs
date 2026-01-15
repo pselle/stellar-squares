@@ -1,5 +1,5 @@
 use soroban_sdk::{
-    Address, BytesN, Env, String, contract, contracterror, contractimpl, contracttype, log,
+    Address, BytesN, Env, String, contract, contracterror, contractimpl, contracttype,
     panic_with_error,
 };
 
