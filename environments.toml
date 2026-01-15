@@ -29,7 +29,7 @@ default = true
 
 [staging.contracts]
 nft_sequential_minting_example = { id = "CCH4FQ4CTAHFYFKMVKGXEOHR746G2GNQHYNY5GTFPW66A4JEBD2EDAMZ"}
-squares_gallery = { id = "CCH4FQ4CTAHFYFKMVKGXEOHR746G2GNQHYNY5GTFPW66A4JEBD2EDAMZ" } # placeholder ID
+squares_gallery = { id = "CBMBLEP46NARZLOEWE44KPGUSNWYMNAZI2QY6A4ZX64CCFLCXSURQEUN" }
 
 ### Production environment configuration
 [production.network]
@@ -37,14 +37,9 @@ rpc-url = "https://our-custom-rpc-provider.cool"
 network-passphrase = "Public Global Stellar Network ; September 2015"
 
 [[production.accounts]]
-name = "official-team-account"
+name = "gallery-mainnet"
 default = true
 
 [production.contracts]
-# soroban-atomic-swap-contract = { id = "C987..." }
-# soroban-auth-contract = { id = "C876..." }
-# soroban-errors-contract = { id = "C765..." }
-# soroban-hello-world-contract = { id = "C654..." }
-# soroban-increment-contract = { id = "C543..." }
-# soroban-token-contract = { id = "C432..." }
-# eurc = { id = "C321..." }
+nft_sequential_minting_example = { id = "TODO"}
+squares_gallery = { id = "TODO" }
