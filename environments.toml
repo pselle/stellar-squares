@@ -29,7 +29,7 @@ default = true
 
 [staging.contracts]
 nft_sequential_minting_example = { id = "CCH4FQ4CTAHFYFKMVKGXEOHR746G2GNQHYNY5GTFPW66A4JEBD2EDAMZ"}
-squares_gallery = { id = "CBMBLEP46NARZLOEWE44KPGUSNWYMNAZI2QY6A4ZX64CCFLCXSURQEUN" }
+squares_gallery = { id = "CAHTPQ4TKOGE3KTNK5YX4A3ZAX4OO6PHUJXM5OAJDADVQC2FVMVXDHIC" }
 
 ### Production environment configuration
 [production.network]

@@ -30,6 +30,11 @@ fn test_deploy_collection() {
 
     let last_nft_owner = nft_client.owner_of(&19u32);
     assert_eq!(&contract_id, &last_nft_owner);
+
+    // Deploy a second collection
+    let nft_address_2 = client.deploy_collection(&String::from_str(&env, "https://example.com/"), &String::from_str(&env, "Squares Gallery 2"), &String::from_str(&env, "SQG2"), &10u32);
+    assert!(nft_address_2.exists());
+    assert!(nft_address != nft_address_2);
 }
 
 #[test]
