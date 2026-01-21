@@ -32,8 +32,8 @@ export const useGetCollectionAddress = (): UseQueryResult<string, Error> =>
       }
       throw new Error("Failed to get collection address");
     },
-    staleTime: Infinity, // Never goes stale - collection address is immutable
-    gcTime: Infinity, // Keep in memory forever
+    // staleTime: Infinity, // Never goes stale - collection address is immutable
+    // gcTime: Infinity, // Keep in memory forever
     enabled: true,
   });
 
@@ -47,8 +47,8 @@ export const useGetGalleryAddress = (): UseQueryResult<string, Error> =>
       }
       throw new Error("Failed to get gallery address");
     },
-    staleTime: Infinity, // Never goes stale - gallery address is immutable
-    gcTime: Infinity, // Keep in memory forever
+    // staleTime: Infinity, // Never goes stale - gallery address is immutable
+    // gcTime: Infinity, // Keep in memory forever
     enabled: true,
   });
 
@@ -77,8 +77,8 @@ export const useGetOwner = (
       return "Token not minted";
     },
     enabled: !!collectionAddress && !!galleryAddress,
-    staleTime: 1000 * 60 * 5, // Cache for 5 minutes
-    gcTime: 1000 * 60 * 30, // Keep in memory for 30 minutes
+    // staleTime: 1000 * 60 * 5, // Cache for 5 minutes
+    // gcTime: 1000 * 60 * 30, // Keep in memory for 30 minutes
   });
 
 // Hook to get token URI for metadata
@@ -101,6 +101,6 @@ export const useGetTokenUri = (
       return null;
     },
     enabled: !!collectionAddress,
-    staleTime: Infinity, // Token URI should never change
-    gcTime: 1000 * 60 * 60, // Keep in memory for 1 hour
+    // staleTime: Infinity, // Token URI should never change
+    // gcTime: 1000 * 60 * 60, // Keep in memory for 1 hour
   });
