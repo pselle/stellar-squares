@@ -1,13 +1,18 @@
 {
-  "buildCommand": "npm run build:staging",
+  "buildCommand": null,
   "outputDirectory": "dist",
-  "framework": "vite",
-  "env": {
-    "STELLAR_SCAFFOLD_ENV": "staging"
-  },
-  "build": {
-    "env": {
-      "STELLAR_SCAFFOLD_ENV": "staging"
+  "framework": null,
+  "installCommand": "echo 'Skipping install - using pre-built assets'",
+  "builds": [
+    {
+      "src": "dist/**",
+      "use": "@vercel/static"
     }
-  }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ]
 }
