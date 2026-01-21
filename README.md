@@ -15,3 +15,17 @@ Before getting started, make sure you’ve met the requirements listed in the [S
 - [npm](https://www.npmjs.com/): Comes with the node installer or can also be installed package managers such as Homebrew, Chocolatey, apt, etc.
 - [Stellar CLI](https://github.com/stellar/stellar-core)
 - [Scaffold Stellar CLI Plugin](https://github.com/AhaLabs/scaffold-stellar)
+
+## Running the project locally
+
+TODO add details
+
+## Deploying
+
+The project is deployed to Vercel as a static build. To deploy a staging (testnet) site:
+
+```
+npm run build:staging
+npx vercel build
+npx vercel --prebuilt
+```

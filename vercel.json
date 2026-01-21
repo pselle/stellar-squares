@@ -1,18 +1,5 @@
 {
-  "buildCommand": null,
-  "outputDirectory": "dist",
-  "framework": null,
+  "buildCommand": "echo 'Skipping build - using pre-built assets'",
   "installCommand": "echo 'Skipping install - using pre-built assets'",
-  "builds": [
-    {
-      "src": "dist/**",
-      "use": "@vercel/static"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
-    }
-  ]
+  "rewrites": [{ "source": "/((?!api/).*)", "destination": "/index.html" }]
 }
