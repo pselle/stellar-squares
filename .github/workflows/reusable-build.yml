@@ -10,7 +10,6 @@ on:
 env:
   CARGO_TERM_COLOR: always
   PKG_CONFIG_PATH: /usr/lib/pkgconfig
-  PUBLIC_STELLAR_NETWORK: local
 
 jobs:
   build:
