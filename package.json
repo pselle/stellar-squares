@@ -7,7 +7,7 @@
     "dev": "npm start",
     "start": "concurrently --kill-others-on-fail --names stellar,vite -c gray,green --pad-prefix \"stellar scaffold watch --build-clients\" \"vite\"",
     "build": "tsc -b && vite build",
-    "build:staging": "rm -rf dist && STELLAR_SCAFFOLD_ENV=staging stellar scaffold build --build-clients && vite build --mode staging",
+    "build:staging": "rm -rf dist && STELLAR_SCAFFOLD_ENV=staging stellar-scaffold build --build-clients && vite build --mode staging",
     "install:contracts": "npm install --workspace=packages && npm run build --workspace=packages",
     "preview": "vite preview",
     "lint": "eslint .",
