@@ -1,6 +1,6 @@
 extern crate std;
 
-use soroban_sdk::{testutils::Address as _, Address, Env, String};
+use soroban_sdk::{Address, Env, String, testutils::Address as _};
 
 use crate::contract::{ExampleContract, ExampleContractClient};
 

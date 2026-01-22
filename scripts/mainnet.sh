@@ -10,7 +10,7 @@ stellar contract optimize --wasm target/stellar/mainnet/squares_gallery.wasm
 # Upload OZ NFT contract. v2 will replace this with references to the Stellar Registry
 WASM_HASH=$(stellar contract upload --wasm contracts/squares-gallery/fixtures/nft_sequential_minting_example.wasm --source-account gallery-mainnet)
 # Deploy the gallery contract
-contract_id=$(stellar contract deploy --wasm target/stellar/mainnet/squares_gallery.optimized.wasm --source gallery-mainnet -- --owner gallery-mainnet --nft_wasm_hash $WASM_HASH)
+contract_id=$(stellar contract deploy --wasm target/stellar/mainnet/squares_gallery.optimized.wasm --source gallery-mainnet -- --owner gallery-mainnet --nft_wasm_hash $WASM_HASH --xlm_sac $(stellar contract id asset --asset native))
 echo "Deployed squares_gallery contract with ID: $contract_id"
 # Update contract ID in environments.toml
 awk -v id="$contract_id" '
