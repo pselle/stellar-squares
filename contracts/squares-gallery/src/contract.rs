@@ -13,6 +13,7 @@ pub enum Error {
     MintingFailed = 2,
     SymbolAlreadyDeployed = 3,
     XLMTransferFailed = 4,
+    TokenNotOwnedByGallery = 5,
 }
 
 #[contracttype]
@@ -117,15 +118,18 @@ impl Contract {
             .get(&DataKey::CollectionAddress(symbol))
             .expect("collection_address not present for symbol");
         let client = NftClient::new(e, &collection_address);
+
         // Ensure that token is owned by gallery
         let owner = client.owner_of(&token_id);
         if owner != gallery_address {
-            panic_with_error!(e, Error::Unauthorized);
+            panic_with_error!(e, Error::TokenNotOwnedByGallery);
         }
-        // // Purchaser transfers 100 XLM to gallery for the purchase
+
+        // Purchaser transfers 100 XLM to gallery for the purchase
         let _ = Self::xlm_client(e)
-            .try_transfer(&buyer, &gallery_address, &100_0000000i128)
-            .map_err(|_| Error::XLMTransferFailed);
+            .try_transfer(&buyer, &gallery_address, &100i128)
+            .unwrap_or_else(|_| panic_with_error!(e, Error::XLMTransferFailed));
+
         // Transfer the NFT from gallery to buyer
         client.transfer(&gallery_address, &buyer, &token_id);
     }
