@@ -1,6 +1,6 @@
 #![cfg(test)]
 
-use crate::contract::{Contract, ContractClient};
+use crate::contract::{Contract, ContractClient, Error};
 use crate::nft::NftClient;
 use soroban_sdk::testutils::Address as _;
 use soroban_sdk::token::StellarAssetClient;
@@ -135,4 +135,9 @@ fn test_withdraw_to_owner() {
 
     let owner_balance = xlm_client.balance(&owner.clone());
     assert_eq!(owner_balance, 300);
+
+    // Attempting to withdraw more than the gallery balance should panic
+    let result = client.try_withdraw(&500);
+    assert!(result.is_err());
+    assert_eq!(result.unwrap_err().unwrap(), Error::InvalidWithdrawalAmount.into());
 }

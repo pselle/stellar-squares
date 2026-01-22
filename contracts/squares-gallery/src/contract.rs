@@ -14,6 +14,7 @@ pub enum Error {
     SymbolAlreadyDeployed = 3,
     XLMTransferFailed = 4,
     TokenNotOwnedByGallery = 5,
+    InvalidWithdrawalAmount = 6,
 }
 
 type CollectionSymbol = String;
@@ -154,6 +155,14 @@ impl Contract {
             .expect("owner should be set");
         // Only owner can request withdrawals
         owner.require_auth();
+
+        // get the balance of the gallery contract
+        let gallery_address = e.current_contract_address();
+        let balance = Self::xlm_client(e).balance(&gallery_address);
+        // Assert that the amount is less than or equal to the balance
+        if amount > balance {
+            panic_with_error!(e, Error::InvalidWithdrawalAmount);
+        }
 
         let gallery_address = e.current_contract_address();
         let _ = Self::xlm_client(e)
