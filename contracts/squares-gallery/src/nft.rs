@@ -8,4 +8,5 @@ use soroban_sdk::{Address, Env, contracttrait};
 pub trait NftInterface {
     fn mint(env: Env, to: Address);
     fn owner_of(e: &Env, token_id: u32) -> Address;
+    fn transfer(e: &Env, from: &Address, to: &Address, token_id: &u32);
 }
