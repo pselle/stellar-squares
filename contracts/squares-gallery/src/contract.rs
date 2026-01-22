@@ -134,6 +134,21 @@ impl Contract {
         client.transfer(&gallery_address, &buyer, &token_id);
     }
 
+    pub fn withdraw(e: &Env, amount: i128) {
+        let owner: Address = e
+            .storage()
+            .instance()
+            .get(&DataKey::Owner)
+            .expect("owner should be set");
+        // Only admins can request withdrawls
+        owner.require_auth();
+
+        let gallery_address = e.current_contract_address();
+        let _ = Self::xlm_client(e)
+            .try_transfer(&gallery_address, &owner, &amount)
+            .unwrap_or_else(|_| panic_with_error!(e, Error::XLMTransferFailed));
+    }
+
     fn xlm_client(env: &Env) -> TokenClient<'_> {
         let xlm_sac: Address = env
             .storage()

@@ -104,3 +104,32 @@ fn test_purchase_nft() {
     let gallery_xlm_balance_after = xlm_client.balance(&contract_id);
     assert_eq!(gallery_xlm_balance_after, 100);
 }
+
+#[test]
+fn test_withdraw_to_owner() {
+    let env = Env::default();
+    env.mock_all_auths();
+    let owner = Address::generate(&env);
+    let wasm_hash: BytesN<32> = env.deployer().upload_contract_wasm(WASM);
+    let xlm_sac = env.register_stellar_asset_contract_v2(owner.clone());
+
+    let contract_id = env.register(Contract, (owner.clone(), wasm_hash, xlm_sac.address()));
+    let client = ContractClient::new(&env, &contract_id);
+
+    let xlm_client = StellarAssetClient::new(&env, &xlm_sac.address());
+
+    // Mint some XLM to the gallery contract to set it up with a balance
+    xlm_client.mint(&contract_id, &500);
+
+    let gallery_balance = xlm_client.balance(&contract_id);
+    assert_eq!(gallery_balance, 500);
+
+    // Withdraw to the gallery owner
+    client.withdraw(&300);
+
+    let gallery_balance_after = xlm_client.balance(&contract_id);
+    assert_eq!(gallery_balance_after, 200);
+
+    let owner_balance = xlm_client.balance(&owner.clone());
+    assert_eq!(owner_balance, 300);
+}
