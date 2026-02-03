@@ -5,7 +5,7 @@ import { rpcUrl, networkPassphrase } from "../contracts/util";
 
 // Create a single NFT client instance once we have the collection address
 let nftClient: Client | null = null;
-const COLLECTION_SYMBOL = "SSQ";
+export const COLLECTION_SYMBOL = "SSQ";
 
 const IPFS_GATEWAY = "https://ipfs.io/ipfs/";
 export function ipfsToHttp(ipfsUri: string): string {
