@@ -1,3 +1,29 @@
+.pageWrapper {
+  max-width: 120rem;
+  margin: 0 auto;
+  position: relative;
+}
+
+.titleHeader {
+  color: red;
+  text-align: center;
+}
+
+.navigation {
+  position: absolute;
+  display: flex;
+  top: 20px;
+  right: 0;
+  align-items: center;
+}
+
+.activeAddress {
+  max-width: 80px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 2px;
+}
+
 .collectionLayout {
   display: flex;
   gap: 40px;
@@ -29,5 +55,11 @@
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 20px;
   flex: 1;
-  padding: 0 16px 16px 16px;
+  padding: 0 0 16px;
+}
+
+footer {
+  padding: 20px 0;
+  margin: 40px 0 0;
+  border-top: 1px solid #9b9b9b;
 }

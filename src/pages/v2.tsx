@@ -1,21 +1,42 @@
 import React from "react";
 import ArtCard from "../components/ArtCard";
 import styles from "./v2.module.css";
-import { connectWallet } from "../util/wallet";
+import { connectWallet, disconnectWallet } from "../util/wallet";
 import { useWallet } from "../hooks/useWallet";
 
 const Home: React.FC = () => {
   const { address, isPending } = useWallet();
   const buttonLabel = isPending ? "Loading..." : "Connect";
 
+  const AppName = "Stellar Squares";
+
   return (
-    <>
-      <header>Header content here</header>
-      <nav>
+    <div className={styles.pageWrapper}>
+      <header>
+        <h1 className={styles.titleHeader}>Stellar Squares</h1>
+      </header>
+      <nav className={styles.navigation}>
         {!address && (
-          <button onClick={() => void connectWallet()} disabled={isPending}>
+          <button
+            className={styles.navButton}
+            onClick={() => void connectWallet()}
+            disabled={isPending}
+          >
             {buttonLabel}
           </button>
+        )}
+        {address && (
+          <>
+            <div className={styles.activeAddress}>{address}</div>
+            <button
+              className={styles.navButton}
+              onClick={() => {
+                void disconnectWallet();
+              }}
+            >
+              Disconnect
+            </button>
+          </>
         )}
       </nav>
       <main>
@@ -25,7 +46,20 @@ const Home: React.FC = () => {
           ))}
         </div>
       </main>
-    </>
+      <footer>
+        <span>
+          © {new Date().getFullYear()} {AppName}. Licensed under the{" "}
+          <a
+            href="http://www.apache.org/licenses/LICENSE-2.0"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Apache License, Version 2.0
+          </a>
+          .
+        </span>
+      </footer>
+    </div>
   );
 };
 
