@@ -4,9 +4,17 @@
   position: relative;
 }
 
+header {
+  background: rgba(255, 255, 255, 0.7);
+  padding: 20px 0;
+  margin-bottom: 10px;
+}
+
 .titleHeader {
-  color: red;
+  color: rebeccapurple;
   text-align: center;
+  font-style: italic;
+  font-size: 3em;
 }
 
 .navigation {
@@ -62,4 +70,9 @@ footer {
   padding: 20px 0;
   margin: 40px 0 0;
   border-top: 1px solid #9b9b9b;
+  color: #9b9b9b;
+}
+
+footer a {
+  color: #9b9b9b;
 }
