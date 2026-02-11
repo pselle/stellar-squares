@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import ArtCard from "../components/ArtCard";
 import styles from "./v2.module.css";
 import { connectWallet, disconnectWallet } from "../util/wallet";
@@ -7,13 +7,37 @@ import { useWallet } from "../hooks/useWallet";
 const Home: React.FC = () => {
   const { address, isPending } = useWallet();
   const buttonLabel = isPending ? "Loading..." : "Connect";
-
+  const [displayModal, setDisplayModal] = useState(false);
   const AppName = "Stellar Squares";
 
   return (
     <div className={styles.pageWrapper}>
       <header>
         <h1 className={styles.titleHeader}>Stellar Squares</h1>
+        <button
+          className={styles.textButton}
+          onClick={() => setDisplayModal(true)}
+        >
+          What's this?
+        </button>
+        <div className={styles.infoModal.concat(displayModal ? "" : " hidden")}>
+          <p>
+            A generative art collection featuring geometric squares in the style
+            of Georg Nees' Schotter. Each piece is a unique NFT showcasing the
+            beauty of controlled randomness and minimalist design.
+          </p>
+
+          <p>
+            Connect your wallet to purchase one from the gallery, before they're
+            all sold.
+          </p>
+          <button
+            className={styles.textButton}
+            onClick={() => setDisplayModal(false)}
+          >
+            Close
+          </button>
+        </div>
       </header>
       <nav className={styles.navigation}>
         {!address && (
