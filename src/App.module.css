@@ -1,5 +1,14 @@
 body {
-  /* opacity: 0.8; */
+  font-family:
+    "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", "Lucida Sans",
+    Arial, sans-serif;
+}
+
+.backgroundPattern {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  opacity: 0.2;
   background-color: #f6e6f7;
   background-image:
     linear-gradient(135deg, #8741cd 25%, transparent 25%),
@@ -13,7 +22,4 @@ body {
     0 0;
   background-size: 27px 27px;
   background-repeat: repeat;
-  font-family:
-    "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", "Lucida Sans",
-    Arial, sans-serif;
 }
