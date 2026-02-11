@@ -35,7 +35,7 @@ const Home: React.FC = () => {
             className={styles.textButton}
             onClick={() => setDisplayModal(false)}
           >
-            Close
+            Hide collection info
           </button>
         </div>
       </header>
