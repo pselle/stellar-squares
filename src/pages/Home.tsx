@@ -1,47 +1,76 @@
-import React from "react";
-import ConnectAccount from "../components/ConnectAccount.tsx";
-import { Layout, Text } from "@stellar/design-system";
+import React, { useState } from "react";
 import ArtCard from "../components/ArtCard";
 import styles from "./Home.module.css";
+import { connectWallet, disconnectWallet } from "../util/wallet";
+import { useWallet } from "../hooks/useWallet";
 
 const Home: React.FC = () => {
-  const AppName = "Important Diagrams";
+  const { address, isPending } = useWallet();
+  const buttonLabel = isPending ? "Loading..." : "Connect";
+  const [displayModal, setDisplayModal] = useState(false);
+  const AppName = "Stellar Squares";
 
   return (
-    <>
-      <Layout.Header
-        projectId={AppName}
-        projectTitle={AppName}
-        contentRight={
-          <>
-            <ConnectAccount />
-          </>
-        }
-      />
-      <Layout.Content>
-        <Layout.Inset>
-          <div className={styles.collectionLayout}>
-            <div className={styles.collectionHeader}>
-              <Text as="h1" size="xl">
-                Schotter Squares Collection
-              </Text>
-              <p className={styles.collectionDescription}>
-                A generative art collection featuring geometric squares in the
-                style of Georg Nees' Schotter. Each piece is a unique NFT
-                showcasing the beauty of controlled randomness and minimalist
-                design.
-              </p>
-            </div>
+    <div className={styles.pageWrapper}>
+      <header>
+        <h1 className={styles.titleHeader}>Stellar Squares</h1>
+        <button
+          className={styles.textButton}
+          onClick={() => setDisplayModal(true)}
+        >
+          What's this?
+        </button>
+        <div className={styles.infoModal.concat(displayModal ? "" : " hidden")}>
+          <p>
+            A generative art collection featuring geometric squares in the style
+            of Georg Nees' Schotter. Each piece is a unique NFT showcasing the
+            beauty of controlled randomness and minimalist design.
+          </p>
 
-            <div className={styles.artCardsGrid}>
-              {Array.from(Array(20)).map((_, tokenId) => (
-                <ArtCard key={`card-${tokenId}`} tokenId={tokenId} />
-              ))}
-            </div>
-          </div>
-        </Layout.Inset>
-      </Layout.Content>
-      <Layout.Footer hideLegalLinks={true}>
+          <p>
+            Connect your wallet to purchase one from the gallery, before they're
+            all sold.
+          </p>
+          <button
+            className={styles.textButton}
+            onClick={() => setDisplayModal(false)}
+          >
+            Close
+          </button>
+        </div>
+      </header>
+      <nav className={styles.navigation}>
+        {!address && (
+          <button
+            className={styles.navButton}
+            onClick={() => void connectWallet()}
+            disabled={isPending}
+          >
+            {buttonLabel}
+          </button>
+        )}
+        {address && (
+          <>
+            <div className={styles.activeAddress}>{address}</div>
+            <button
+              className={styles.navButton}
+              onClick={() => {
+                void disconnectWallet();
+              }}
+            >
+              Disconnect
+            </button>
+          </>
+        )}
+      </nav>
+      <main>
+        <div className={styles.artCardsGrid}>
+          {Array.from(Array(20)).map((_, tokenId) => (
+            <ArtCard key={`card-${tokenId}`} tokenId={tokenId} />
+          ))}
+        </div>
+      </main>
+      <footer>
         <span>
           © {new Date().getFullYear()} {AppName}. Licensed under the{" "}
           <a
@@ -53,8 +82,8 @@ const Home: React.FC = () => {
           </a>
           .
         </span>
-      </Layout.Footer>
-    </>
+      </footer>
+    </div>
   );
 };
 
