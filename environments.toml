@@ -15,7 +15,7 @@ client = true
 # Update the WASM hash below to match the hash of your built and uploaded contract.
 constructor_args = "--owner me --nft_wasm_hash 88ff6a485f04ece39f8538dbb27f09b97e6e5383f6d49dad5dae026d6aa9f83c --xlm_sac $(stellar contract id asset --asset native)"
 after_deploy = """
-deploy_collection --base_uri "https://example.com/mynft/" --name "Squares Gallery" --symbol "SSQ" --collection_size 20 --item_price 100
+deploy_collection --base_uri "https://example.com/mynft/" --name "Squares Gallery" --symbol "SSQ" --collection_size 20 --item_price 10000000
 """
 
 ### Staging environment configuration
