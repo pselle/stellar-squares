@@ -19,17 +19,35 @@ header {
   font-size: 3em;
 }
 
-.infoModal {
+.infoModal,
+.infoModalHidden {
   text-align: center;
   max-width: 450px;
   margin: 0 auto;
-  transition: transform 0.5s ease;
+  transition:
+    max-height 0.5s ease,
+    opacity 0.3s ease,
+    padding 0.5s ease;
+  overflow: hidden;
+}
+
+.infoModal {
+  max-height: 500px;
+  opacity: 1;
+  padding: 20px 0;
+}
+
+.infoModalHidden {
+  max-height: 0;
+  opacity: 0;
+  padding: 0;
 }
 
 .textButton {
   background: none;
   border: none;
   font-style: italic;
+  cursor: pointer;
 }
 
 .navigation {
