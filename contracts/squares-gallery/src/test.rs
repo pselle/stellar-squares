@@ -139,5 +139,8 @@ fn test_withdraw_to_owner() {
     // Attempting to withdraw more than the gallery balance should panic
     let result = client.try_withdraw(&500);
     assert!(result.is_err());
-    assert_eq!(result.unwrap_err().unwrap(), Error::InvalidWithdrawalAmount.into());
+    assert_eq!(
+        result.unwrap_err().unwrap(),
+        Error::InvalidWithdrawalAmount.into()
+    );
 }
