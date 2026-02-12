@@ -17,7 +17,6 @@ pub enum Error {
     InvalidWithdrawalAmount = 6,
 }
 
-
 #[contracttype]
 pub enum DataKey {
     Owner,
@@ -109,7 +108,9 @@ impl Contract {
             }
         }
         // Store the item price for this collection
-        e.storage().instance().set(&DataKey::ItemPrice(symbol.clone()), &item_price);
+        e.storage()
+            .instance()
+            .set(&DataKey::ItemPrice(symbol.clone()), &item_price);
         collection_address
     }
 
