@@ -26,7 +26,8 @@ awk -v id="$contract_id" '
 echo "Updated environments.toml with new gallery contract ID."
 
 # Deploy the Squares NFT collection
-collection_id=$(stellar contract invoke --id $contract_id  --source testnet-user -- deploy_collection --base_uri "ipfs://bafybeicqgwje7trm27thcwngfhtz2ppadly2zcnxp3ch6plt5fe4ipoacu/" --name "Stellar Squares" --symbol "SSQ" --collection_size 20 --item_price 100)
+item_price=100000000 # 10 XLM in stroops
+collection_id=$(stellar contract invoke --id $contract_id  --source testnet-user -- deploy_collection --base_uri "ipfs://bafybeicqgwje7trm27thcwngfhtz2ppadly2zcnxp3ch6plt5fe4ipoacu/" --name "Stellar Squares" --symbol "SSQ" --collection_size 20 --item_price $item_price)
 
 # Update environments.toml to point to that collection for the nft example contract
 awk -v nft_id="$collection_id" '
