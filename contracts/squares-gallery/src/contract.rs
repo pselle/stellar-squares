@@ -39,6 +39,41 @@ impl Contract {
         e.storage().instance().set(&DataKey::XlmSac, &xlm_sac);
     }
 
+    /// Purchase an NFT owned by the gallery from a collection, by symbol and token_id
+    pub fn purchase_nft(e: &Env, buyer: Address, symbol: String, token_id: u32) {
+        // Buyer must authorize the purchase
+        buyer.require_auth();
+        let gallery_address = e.current_contract_address();
+        let collection_address: Address = e
+            .storage()
+            .instance()
+            .get(&DataKey::CollectionAddress(symbol.clone()))
+            .expect("collection_address not present for symbol");
+        let client = NftClient::new(e, &collection_address);
+
+        // Ensure that token is owned by gallery
+        let owner = client.owner_of(&token_id);
+        if owner != gallery_address {
+            panic_with_error!(e, Error::TokenNotOwnedByGallery);
+        }
+
+        // Purchaser transfers the item price in XLM to gallery for the purchase
+        let item_price: i128 = e
+            .storage()
+            .instance()
+            .get(&DataKey::ItemPrice(symbol.clone()))
+            .expect("item_price not present for symbol");
+
+        let _ = Self::xlm_client(e)
+            .try_transfer(&buyer, &gallery_address, &item_price)
+            .unwrap_or_else(|_| panic_with_error!(e, Error::XLMTransferFailed));
+
+        // Transfer the NFT from gallery to buyer
+        client.transfer(&gallery_address, &buyer, &token_id);
+    }
+
+    /// Returns the collection address for a given symbol, panicking if it doesn't exist.
+    /// The symbol is used as the unique identifier for each collection.
     pub fn collection_address(e: &Env, symbol: String) -> Address {
         e.storage()
             .instance()
@@ -46,12 +81,8 @@ impl Contract {
             .expect("collection_address not present for symbol")
     }
 
-    pub fn gallery_address(e: &Env) -> Address {
-        e.current_contract_address()
-    }
-
     /// Deploys a new NFT collection contract with the given parameters and mints the specified quantity
-    /// of NFTs to the gallery contract itself.
+    /// of NFTs to the gallery contract itself. Owner-only.
     pub fn deploy_collection(
         e: &Env,
         base_uri: String,
@@ -114,39 +145,7 @@ impl Contract {
         collection_address
     }
 
-    // Purchase NFT from collection by symbol and token_id
-    pub fn purchase_nft(e: &Env, buyer: Address, symbol: String, token_id: u32) {
-        // Buyer must authorize the purchase
-        buyer.require_auth();
-        let gallery_address = e.current_contract_address();
-        let collection_address: Address = e
-            .storage()
-            .instance()
-            .get(&DataKey::CollectionAddress(symbol.clone()))
-            .expect("collection_address not present for symbol");
-        let client = NftClient::new(e, &collection_address);
-
-        // Ensure that token is owned by gallery
-        let owner = client.owner_of(&token_id);
-        if owner != gallery_address {
-            panic_with_error!(e, Error::TokenNotOwnedByGallery);
-        }
-
-        // Purchaser transfers the item price in XLM to gallery for the purchase
-        let item_price: i128 = e
-            .storage()
-            .instance()
-            .get(&DataKey::ItemPrice(symbol.clone()))
-            .expect("item_price not present for symbol");
-
-        let _ = Self::xlm_client(e)
-            .try_transfer(&buyer, &gallery_address, &item_price)
-            .unwrap_or_else(|_| panic_with_error!(e, Error::XLMTransferFailed));
-
-        // Transfer the NFT from gallery to buyer
-        client.transfer(&gallery_address, &buyer, &token_id);
-    }
-
+    /// Allows the owner to withdraw from the gallery contract balance. Owner-only.
     pub fn withdraw(e: &Env, amount: i128) {
         let owner: Address = e
             .storage()
@@ -168,6 +167,11 @@ impl Contract {
         let _ = Self::xlm_client(e)
             .try_transfer(&gallery_address, &owner, &amount)
             .unwrap_or_else(|_| panic_with_error!(e, Error::XLMTransferFailed));
+    }
+
+    /// Returns the gallery's own contract address, useful for some client-side operations.
+    pub fn gallery_address(e: &Env) -> Address {
+        e.current_contract_address()
     }
 
     fn xlm_client(env: &Env) -> TokenClient<'_> {

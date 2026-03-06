@@ -11,8 +11,7 @@ Before getting started, make sure you’ve met the requirements listed in the [S
 - [Rust](https://www.rust-lang.org/tools/install)
 - [Cargo](https://doc.rust-lang.org/cargo/) (comes with Rust)
 - Rust target: install the compilation target listed in the [Soroban setup guide](https://developers.stellar.org/docs/build/smart-contracts/getting-started/setup)
-- [Node.js](https://nodejs.org/en/download/package-manager) (v22, or higher)
-- [npm](https://www.npmjs.com/): Comes with the node installer or can also be installed package managers such as Homebrew, Chocolatey, apt, etc.
+- [Node.js & npm](https://nodejs.org/en/download/package-manager) (v22, or higher)
 - [Stellar CLI](https://github.com/stellar/stellar-core)
 - [Scaffold Stellar CLI Plugin](https://github.com/AhaLabs/scaffold-stellar)
 
@@ -40,7 +39,9 @@ With an appropriate wasm hash present, you will be able to run `npm run start` a
 
 ## Deploying the project
 
-The project is deployed to Vercel as a static build. To deploy a staging (testnet) site from your local environment:
+The project is deployed to Vercel as a static build. Deploys happen in CI using GitHub Actions.
+
+To deploy a staging (testnet) site from your local environment:
 
 ```
 npm run build:staging
