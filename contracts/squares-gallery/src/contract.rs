@@ -15,6 +15,7 @@ pub enum Error {
     XLMTransferFailed = 4,
     TokenNotOwnedByGallery = 5,
     InvalidWithdrawalAmount = 6,
+    InvalidUpgrade = 7,
 }
 
 #[contracttype]
@@ -91,12 +92,7 @@ impl Contract {
         collection_size: u32,
         item_price: i128,
     ) -> Address {
-        let owner: Address = e
-            .storage()
-            .instance()
-            .get(&DataKey::Owner)
-            .expect("owner should be set");
-        owner.require_auth();
+        Self::require_owner(e);
 
         // Ensure symbol is not already used
         if e.storage()
@@ -147,13 +143,9 @@ impl Contract {
 
     /// Allows the owner to withdraw from the gallery contract balance. Owner-only.
     pub fn withdraw(e: &Env, amount: i128) {
-        let owner: Address = e
-            .storage()
-            .instance()
-            .get(&DataKey::Owner)
-            .expect("owner should be set");
-        // Only owner can request withdrawals
-        owner.require_auth();
+        Self::require_owner(e);
+
+        let owner: Address = Self::owner(e);
 
         // get the balance of the gallery contract
         let gallery_address = e.current_contract_address();
@@ -169,9 +161,28 @@ impl Contract {
             .unwrap_or_else(|_| panic_with_error!(e, Error::XLMTransferFailed));
     }
 
+    /// Upgrade the gallery contract to a new WASM. The new WASM must have the same constructor args.
+    /// Owner-only.
+    pub fn upgrade(e: &Env, new_wasm_hash: BytesN<32>) {
+        Self::require_owner(e);
+        e.deployer().update_current_contract_wasm(new_wasm_hash);
+    }
+
     /// Returns the gallery's own contract address, useful for some client-side operations.
     pub fn gallery_address(e: &Env) -> Address {
         e.current_contract_address()
+    }
+
+    fn owner(e: &Env) -> Address {
+        e.storage()
+            .instance()
+            .get(&DataKey::Owner)
+            .expect("owner should be set")
+    }
+
+    fn require_owner(e: &Env) {
+        let owner: Address = Self::owner(e);
+        owner.require_auth();
     }
 
     fn xlm_client(env: &Env) -> TokenClient<'_> {
