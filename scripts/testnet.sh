@@ -7,6 +7,20 @@ rm -rf target/stellar
 stellar scaffold build staging
 stellar contract optimize --wasm target/stellar/testnet/squares_gallery.wasm
 
+# If we passed an "upgrade" argument, we'll upgrade the existing contract instead of deploying a new one
+if [ "$1" = "upgrade" ]; then
+  existing_contract_id=$(awk -F'"' '/squares_gallery = { id = "/ {print $2}' environments.toml | head -n 1)
+  if [ -z "$existing_contract_id" ]; then
+    echo "No existing contract ID found in environments.toml. Cannot perform upgrade."
+    exit 1
+  fi
+  # echo "Upgrading existing contract with ID: $existing_contract_id"
+  NEW_WASM_HASH=$(stellar contract upload --wasm target/stellar/testnet/squares_gallery.optimized.wasm --source-account testnet-user)
+  # echo "New WASM uploaded with hash: $NEW_WASM_HASH"
+  stellar contract invoke --id $existing_contract_id --source testnet-user -- upgrade --new-wasm-hash $NEW_WASM_HASH
+  echo "Upgrade transaction submitted. Please check the contract's transaction history for confirmation."
+  exit 0
+fi
 # Upload OZ NFT contract. v2 will replace this with references to the Stellar Registry
 WASM_HASH=$(stellar contract upload --wasm contracts/squares-gallery/fixtures/nft_sequential_minting_example.wasm --source-account testnet-user)
 # Deploy the gallery contract
