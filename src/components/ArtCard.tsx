@@ -41,7 +41,6 @@ const ArtCard: React.FC<{ tokenId: number }> = ({ tokenId }) => {
         token_id: tokenId,
         buyer: address,
       },
-      // @ts-expect-error js-stellar-sdk has bad typings; publicKey is, in fact, allowed
       { publicKey: address },
     );
 
