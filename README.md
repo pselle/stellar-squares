@@ -179,7 +179,7 @@ This project is licensed under the Apache 2.0 License - see the [LICENSE](LICENS
 - **[Scaffold Stellar](https://scaffoldstellar.org)** for the development framework
 - **[OpenZeppelin](https://www.openzeppelin.com/)** for audited smart contract libraries
 - **[Stellar Development Foundation](https://stellar.org)** for the Stellar network
-- **Georg Nees** for the artistic inspiration behind "Schotter"
+- **Georg Nees** for the artistic inspiration
 
 ---
 
