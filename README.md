@@ -2,9 +2,8 @@
 
 > **A showcase project demonstrating modern NFT development on Stellar using Scaffold Stellar and OpenZeppelin contracts**
 
-![Built with Scaffold Stellar](https://img.shields.io/badge/Built_with-Scaffold_Stellar-blue?style=for-the-badge)
-![Powered by OpenZeppelin](https://img.shields.io/badge/Powered_by-OpenZeppelin_Stellar-green?style=for-the-badge)
-![Blockchain Stellar](https://img.shields.io/badge/Blockchain-Stellar-black?style=for-the-badge)
+[![Built with Scaffold Stellar](https://img.shields.io/badge/Built_with-Scaffold_Stellar-blue?style=for-the-badge)](https://scaffoldstellar.org)
+[![Powered by OpenZeppelin](https://img.shields.io/badge/Powered_by-OpenZeppelin_Smart_Contracts-green?style=for-the-badge)](https://github.com/OpenZeppelin/stellar-contracts)
 
 ## 🎨 About
 
