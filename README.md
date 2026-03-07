@@ -111,7 +111,7 @@ This project is designed to showcase integration with the upcoming **Stellar Reg
 
 - **Testnet Registry**: [https://testnet.rgstry.xyz/](https://testnet.rgstry.xyz/)
 - **Contract Publication**: OpenZeppelin contracts used in this project will be published to the registry
-- **Future-Ready**: Architecture supports seamless migration to mainnet registry
+- **Future-Ready**: Future editions of this project will use the Stellar Registry contracts & WASM for the NFT contract
 
 ## 🛠️ Development
 
