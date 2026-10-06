@@ -1,18 +1,15 @@
+import { Networks } from "@creit.tech/stellar-wallets-kit";
 import { z } from "zod";
-import { WalletNetwork } from "@creit.tech/stellar-wallets-kit";
 
-type NetworkType = "testnet" | "mainnet" | "futurenet" | "custom";
-type Network = {
+type NetworkType = "mainnet" | "testnet" | "futurenet" | "local";
+
+interface Network {
   id: NetworkType;
   label: string;
-  horizonUrl: string;
-  horizonHeaderName?: string;
-  horizonHeaderValue?: string;
-  rpcUrl: string;
-  rpcHeaderName?: string;
-  rpcHeaderValue?: string;
   passphrase: string;
-};
+  rpcUrl: string;
+  horizonUrl: string;
+}
 
 const envSchema = z.object({
   PUBLIC_STELLAR_NETWORK: z.enum([
@@ -22,7 +19,7 @@ const envSchema = z.object({
     "LOCAL",
     "STANDALONE", // deprecated in favor of LOCAL
   ] as const),
-  PUBLIC_STELLAR_NETWORK_PASSPHRASE: z.nativeEnum(WalletNetwork),
+  PUBLIC_STELLAR_NETWORK_PASSPHRASE: z.enum(Networks),
   PUBLIC_STELLAR_RPC_URL: z.string(),
   PUBLIC_STELLAR_HORIZON_URL: z.string(),
 });
@@ -33,7 +30,7 @@ const env: z.infer<typeof envSchema> = parsed.success
   ? parsed.data
   : {
       PUBLIC_STELLAR_NETWORK: "LOCAL",
-      PUBLIC_STELLAR_NETWORK_PASSPHRASE: WalletNetwork.STANDALONE,
+      PUBLIC_STELLAR_NETWORK_PASSPHRASE: Networks.STANDALONE,
       PUBLIC_STELLAR_RPC_URL: "http://localhost:8000/rpc",
       PUBLIC_STELLAR_HORIZON_URL: "http://localhost:8000",
     };
@@ -65,7 +62,6 @@ export const labPrefix = () => {
 
 // NOTE: needs to be exported for contract files in this directory
 export const rpcUrl = env.PUBLIC_STELLAR_RPC_URL;
-
 export const horizonUrl = env.PUBLIC_STELLAR_HORIZON_URL;
 
 const networkToId = (network: string): NetworkType => {
@@ -77,7 +73,7 @@ const networkToId = (network: string): NetworkType => {
     case "FUTURENET":
       return "futurenet";
     default:
-      return "custom";
+      return "local";
   }
 };
 

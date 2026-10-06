@@ -1,7 +1,10 @@
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
-import squaresGallery from "../contracts/squares_gallery";
+import { networkPassphrase, rpcUrl } from "@stellar-scaffold/app-lib";
+import { squaresGallery } from "@stellar-scaffold/app-lib/clients";
+// The collection's address is only known at runtime (the gallery deploys it),
+// so we build our own client from the generated binding package rather than
+// using the pre-bound instance exported from app-lib/clients.
 import { Client } from "nft_sequential_minting_example";
-import { rpcUrl, networkPassphrase } from "../contracts/util";
 
 // Create a single NFT client instance once we have the collection address
 let nftClient: Client | null = null;

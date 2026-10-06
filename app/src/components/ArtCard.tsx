@@ -1,5 +1,5 @@
 import { useQueryClient } from "@tanstack/react-query";
-import squares_gallery from "../contracts/squares_gallery";
+import { squaresGallery } from "@stellar-scaffold/app-lib/clients";
 import {
   COLLECTION_SYMBOL,
   useGetCollectionAddress,
@@ -35,7 +35,7 @@ const ArtCard: React.FC<{ tokenId: number }> = ({ tokenId }) => {
   const purchaseNFT = async () => {
     if (!collectionAddress || !address) return;
 
-    const transaction = await squares_gallery.purchase_nft(
+    const transaction = await squaresGallery.purchase_nft(
       {
         symbol: COLLECTION_SYMBOL,
         token_id: tokenId,

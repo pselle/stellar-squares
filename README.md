@@ -55,8 +55,9 @@ Before getting started, make sure you’ve met the requirements listed in the [S
 
    ```bash
    git clone <repository-url>
-   cd important_diagrams
+   cd stellar-squares
    npm install
+   cp app/.env.example app/.env
    ```
 
 2. **Set up local Stellar environment:**
@@ -122,7 +123,6 @@ This project is designed to showcase integration with the upcoming **Stellar Reg
 - `npm run build:staging` - Build for staging/testnet
 - `npm run lint` - Lint code
 - `npm run format` - Format code with Prettier
-- `npm run install:contracts` - Install and build contract packages
 
 ### Project Structure
 
@@ -130,14 +130,16 @@ This project is designed to showcase integration with the upcoming **Stellar Reg
 ├── contracts/              # Smart contracts (Rust)
 │   ├── nft-sequential-minting/  # OpenZeppelin NFT contract
 │   └── squares-gallery/    # Gallery management contract
-├── packages/               # Contract TypeScript bindings
-├── src/                    # React frontend
-│   ├── components/         # UI components
-│   ├── contracts/          # Contract interaction utilities
-│   ├── hooks/              # React hooks for blockchain integration
-│   ├── pages/              # Application pages
-│   └── providers/          # Context providers (wallet, etc.)
-├── public/                 # Static assets
+├── app/                    # React frontend
+│   ├── public/             # Static assets
+│   └── src/
+│       ├── components/     # UI components
+│       ├── hooks/          # React hooks for blockchain integration
+│       ├── pages/          # Application pages
+│       └── providers/      # Context providers (wallet, etc.)
+├── app-lib/                # Shared wallet, network and formatting helpers
+│   └── clients/            # Generated contract TypeScript clients (not committed)
+├── environments.toml       # Networks, accounts and contracts per environment
 └── scripts/                # Deployment scripts
 ```
 
