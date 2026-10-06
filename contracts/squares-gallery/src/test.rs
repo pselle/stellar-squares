@@ -1,12 +1,10 @@
 #![cfg(test)]
 
 use crate::contract::{Contract, ContractClient, Error};
-use crate::nft::NftClient;
+use crate::nft::{NftClient, WASM};
 use soroban_sdk::testutils::Address as _;
 use soroban_sdk::token::StellarAssetClient;
 use soroban_sdk::{Address, BytesN, Env, String};
-
-const WASM: &[u8] = include_bytes!("../fixtures/nft_sequential_minting_example.wasm");
 
 #[test]
 fn test_deploy_collection() {
