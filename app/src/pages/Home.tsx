@@ -4,6 +4,8 @@ import styles from "./Home.module.css";
 import { connectWallet, disconnectWallet } from "@stellar-scaffold/app-lib";
 import { useWallet } from "../hooks/useWallet";
 
+const CURRENT_YEAR = new Date().getFullYear();
+
 const Home: React.FC = () => {
   const { address, isPending } = useWallet();
   const buttonLabel = isPending ? "Loading..." : "Connect";
@@ -75,7 +77,7 @@ const Home: React.FC = () => {
       </main>
       <footer>
         <span>
-          © {new Date().getFullYear()} {AppName}. Licensed under the{" "}
+          © {CURRENT_YEAR} {AppName}. Licensed under the{" "}
           <a
             href="http://www.apache.org/licenses/LICENSE-2.0"
             target="_blank"

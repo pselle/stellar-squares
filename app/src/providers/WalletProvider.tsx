@@ -58,10 +58,9 @@ export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
   const [isPending, setIsPending] = useState(true);
 
   const updateBalances = useCallback(async () => {
-    if (!address) {
-      setBalances({});
-      return;
-    }
+    // Nothing to fetch when disconnected; the wallet subscription below
+    // clears balances when the address goes away.
+    if (!address) return;
 
     const newBalances = await fetchBalances(address);
     setBalances((prev) => {
@@ -70,11 +69,22 @@ export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
     });
   }, [address]);
 
-  // Refetch on address change (via `updateBalances`' identity) and on network
-  // change — the same address holds different balances per network.
+  // Refetch on address change and on network change — the same address holds
+  // different balances per network. State is only set from the fetch's
+  // callback, never synchronously in the effect body.
   useEffect(() => {
-    void updateBalances();
-  }, [updateBalances, networkPassphrase]);
+    if (!address) return;
+    let cancelled = false;
+    void fetchBalances(address).then((newBalances) => {
+      if (cancelled) return;
+      setBalances((prev) =>
+        deepEqual(newBalances, prev) ? prev : newBalances,
+      );
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [address, networkPassphrase]);
 
   // Subscribe to wallet state. Gets values immediately and on every subsequent
   // change: connect, disconnect, and the wallet switching networks.
