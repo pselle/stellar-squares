@@ -10,6 +10,11 @@ on:
 env:
   CARGO_TERM_COLOR: always
   PKG_CONFIG_PATH: /usr/lib/pkgconfig
+  # The gallery contract resolves `oz/nft-standard` from the Stellar Registry at
+  # build time. These tell that lookup which network to read; the account only
+  # sources read-only simulations, so no secret key is needed.
+  STELLAR_NETWORK: testnet
+  STELLAR_ACCOUNT: GAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWHF
 
 jobs:
   build:
@@ -40,6 +45,15 @@ jobs:
             cargo binstall stellar-scaffold-cli
           else
             echo "stellar-scaffold already installed. Clear cache to force reinstall."
+          fi
+      # The Registry macros shell out to `stellar registry` during cargo build
+      - name: Check for stellar and stellar-registry binaries
+        run: |
+          if ! command -v stellar &> /dev/null; then
+            cargo binstall -y --locked stellar-cli
+          fi
+          if ! command -v stellar-registry &> /dev/null; then
+            cargo binstall -y --locked stellar-registry-cli
           fi
       - run: npm ci
       - run: npm run build:staging

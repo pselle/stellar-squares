@@ -12,8 +12,9 @@ nft_sequential_minting_example = { client = true, constructor_args = "--owner me
 
 [development.contracts.squares_gallery]
 client = true
-# Update the WASM hash below to match the hash of your built and uploaded contract.
-constructor_args = "--owner me --nft_wasm_hash 3d03b140a3ab058529670913ccb8fc7da21f652bb7105df4c203371e090a49a6 --xlm_sac $(stellar contract id asset --asset native)"
+# Hash of the `oz/nft-standard` 0.7.2 Wasm from the Stellar Registry, which the gallery
+# deploys collections from. It must be uploaded to the local network once; see the README.
+constructor_args = "--owner me --nft_wasm_hash b0b3520386c85109faee8333b41bbfbf7779e1de203b77a4a3c9c0cd48aaaee6 --xlm_sac $(stellar contract id asset --asset native)"
 after_deploy = """
 deploy_collection --base_uri "https://example.com/mynft/" --name "Squares Gallery" --symbol "SSQ" --collection_size 20 --item_price 100000000 # 10 XLM
 """

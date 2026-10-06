@@ -1,12 +1,12 @@
-#![allow(dead_code)]
+// Typed client for the NFT collections the gallery deploys, generated at build
+// time from OpenZeppelin's `nft-standard` Wasm published in the Stellar Registry.
 
-use soroban_sdk::{Address, Env, contracttrait};
+// The macro expands to code that reaches for `super::soroban_sdk`.
+#[allow(clippy::single_component_path_imports)]
+use soroban_sdk;
 
-// This file contains an interface for interacting with the NFT contract deployed by the gallery
+stellar_registry::import_contract_client!("oz/nft-standard@0.7.2");
 
-#[contracttrait(client_name = "NftClient")]
-pub trait NftInterface {
-    fn mint(env: Env, to: Address);
-    fn owner_of(e: &Env, token_id: u32) -> Address;
-    fn transfer(e: &Env, from: &Address, to: &Address, token_id: &u32);
-}
+pub use nft_standard::Client as NftClient;
+#[cfg(test)]
+pub use nft_standard::WASM;
