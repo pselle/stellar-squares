@@ -57,8 +57,7 @@ jobs:
             exit 1
           fi
       - run: npm run lint
-      - run: npx prettier . --check
-      - run: npm run install:contracts
+      - run: npm run format:check
       - run: npm run build
       - name: Run tests
         run: npm test --if-present

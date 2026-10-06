@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import ArtCard from "../components/ArtCard";
 import styles from "./Home.module.css";
-import { connectWallet, disconnectWallet } from "../util/wallet";
+import { connectWallet, disconnectWallet } from "@stellar-scaffold/app-lib";
 import { useWallet } from "../hooks/useWallet";
 
 const Home: React.FC = () => {

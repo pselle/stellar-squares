@@ -37,13 +37,11 @@ lerna-debug.log*
 # macOS-specific files
 .DS_Store
 
-# generated contract clients
-packages/*
-# if you have other workspace packages, add them here
-!packages/.gitkeep
+# generated contract bindings + clients (binding packages and index.ts)
+app-lib/clients/*
+!app-lib/clients/.gitkeep
 
-# generated contract client imports
-src/contracts/*
-!src/contracts/util.ts
+# TypeScript incremental build info
+*.tsbuildinfo
 .vercel
 .env*.local
