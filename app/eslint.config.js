@@ -13,7 +13,7 @@ export default tseslint.config(globalIgnores(["dist"]), {
     js.configs.recommended,
     tseslint.configs.recommendedTypeChecked,
     reactDOM.configs.recommended,
-    reactHooks.configs["recommended-latest"],
+    reactHooks.configs.flat["recommended-latest"],
     reactRefresh.configs.vite,
     reactX.configs["recommended-typescript"],
     prettier,
