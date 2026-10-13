@@ -94,7 +94,22 @@ The application will be available at `http://localhost:5173`
 
 ## 📦 Deployment
 
-### Production Deployment
+### Contract Deployment
+
+The gallery contract is published to and deployed from the [Stellar Registry](https://rgstry.xyz) under the name `unverified/squares-gallery`. `scripts/registry.sh` wraps the `stellar registry` commands:
+
+```bash
+scripts/registry.sh testnet publish      # build and publish the Wasm (add --dry-run to simulate)
+scripts/registry.sh testnet deploy       # first time: deploy the named gallery
+scripts/registry.sh testnet register C…  # or: name a gallery that is already deployed
+scripts/registry.sh testnet collection   # first time: deploy the Stellar Squares collection
+scripts/registry.sh testnet upgrade      # later: upgrade the gallery to the latest published Wasm
+scripts/registry.sh testnet id           # print the gallery's contract ID
+```
+
+The published version comes from `version` in `contracts/squares-gallery/Cargo.toml`, and each publish needs a higher version than the last. After the first deploy, put the contract ID in `environments.toml` so the app's generated client points at it. Upgrades keep the same ID. Use `mainnet` in place of `testnet` for production.
+
+### App Deployment
 
 The project is deployed to Vercel as a static build with automated CI/CD through GitHub Actions.
 
@@ -120,7 +135,7 @@ This project uses the [Stellar Registry](https://rgstry.xyz), an on-chain regist
 
 - **NFT collections come from the Registry**: the gallery deploys each collection from OpenZeppelin's `oz/nft-standard` Wasm, pinned to version 0.7.2.
 - **Typed client at build time**: `contracts/squares-gallery/src/nft.rs` uses `stellar_registry::import_contract_client!` to generate the NFT client from that published Wasm, so no Wasm file is checked in.
-- **Coming next**: publishing the gallery contract itself to the Registry and deploying it by name.
+- **The gallery is published and deployed by name**: `scripts/registry.sh` publishes the gallery Wasm as `unverified/squares-gallery` and deploys or upgrades the named instance. See [Contract Deployment](#contract-deployment).
 
 ## 🛠️ Development
 
@@ -148,7 +163,7 @@ This project uses the [Stellar Registry](https://rgstry.xyz), an on-chain regist
 ├── app-lib/                # Shared wallet, network and formatting helpers
 │   └── clients/            # Generated contract TypeScript clients (not committed)
 ├── environments.toml       # Networks, accounts and contracts per environment
-└── scripts/                # Deployment scripts
+└── scripts/                # Registry publish and deploy script
 ```
 
 ## 🤝 Contributing

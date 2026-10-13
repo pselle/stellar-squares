@@ -1,12 +1,21 @@
 [package]
 name = "squares-gallery"
-version = "0.0.0"
-edition = "2024"
+description = "A gallery that deploys NFT collections and sells their tokens for XLM"
+version = "0.1.0"
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
 publish = false
 
 [lib]
 crate-type = ["lib", "cdylib"]
 doctest = false
+
+# Written into the Wasm, and read by `stellar registry publish` for the
+# published name and version.
+[package.metadata.stellar]
+cargo_inherit = true
 
 [dependencies]
 soroban-sdk = { workspace = true }
