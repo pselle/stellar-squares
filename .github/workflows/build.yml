@@ -75,5 +75,8 @@ jobs:
       - run: npm run build
       - name: Run contract tests
         run: cargo test
-      - name: Run tests
-        run: npm test --if-present
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+        working-directory: e2e
+      - name: Run end-to-end smoke tests
+        run: npm run test:e2e
