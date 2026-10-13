@@ -19,9 +19,6 @@ export default defineConfig(() => {
     build: {
       target: "esnext",
     },
-    optimizeDeps: {
-      exclude: ["@stellar/stellar-xdr-json"],
-    },
     define: {
       global: "window",
     },
