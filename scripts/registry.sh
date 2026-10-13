@@ -16,6 +16,8 @@ GALLERY_NAME="unverified/squares-gallery"
 # The Wasm the gallery deploys collections from
 NFT_WASM_NAME="oz/nft-standard"
 NFT_WASM_VERSION="0.7.2"
+# Price of each square: 25 XLM, in stroops (1 XLM = 10,000,000 stroops)
+ITEM_PRICE=250000000
 
 usage() {
   echo "Usage: $0 <testnet|mainnet> <publish|deploy|upgrade|collection|id>" >&2
@@ -32,7 +34,6 @@ testnet)
   export STELLAR_NETWORK=testnet
   export STELLAR_ACCOUNT="${STELLAR_ACCOUNT:-testnet-user}"
   export STELLAR_SCAFFOLD_ENV=staging
-  item_price=1000000000 # 100 XLM in stroops
   ;;
 mainnet)
   export STELLAR_NETWORK=mainnet
@@ -40,7 +41,6 @@ mainnet)
   export STELLAR_RPC_URL="${STELLAR_RPC_URL:-https://rpc.lightsail.network/}"
   export STELLAR_ACCOUNT="${STELLAR_ACCOUNT:-gallery-mainnet}"
   export STELLAR_SCAFFOLD_ENV=production
-  item_price=100
   ;;
 *)
   usage
@@ -83,7 +83,7 @@ collection)
     --name "Stellar Squares" \
     --symbol "SSQ" \
     --collection_size 20 \
-    --item_price "$item_price"
+    --item_price "$ITEM_PRICE"
   ;;
 id)
   gallery_id
