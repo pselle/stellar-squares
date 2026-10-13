@@ -16,8 +16,10 @@ GALLERY_NAME="unverified/squares-gallery"
 # The Wasm the gallery deploys collections from
 NFT_WASM_NAME="oz/nft-standard"
 NFT_WASM_VERSION="0.7.2"
-# Price of each square: 25 XLM, in stroops (1 XLM = 10,000,000 stroops)
-ITEM_PRICE=250000000
+# Price of each square. Set it in XLM; the contract takes stroops.
+#   1 XLM = 10,000,000 stroops, so 25 XLM = 250,000,000 stroops
+ITEM_PRICE_XLM=25
+ITEM_PRICE=$((ITEM_PRICE_XLM * 10000000))
 
 usage() {
   echo "Usage: $0 <testnet|mainnet> <publish|deploy|upgrade|collection|id>" >&2
