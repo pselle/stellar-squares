@@ -13,7 +13,6 @@ env:
   # sources read-only simulations, so no secret key is needed.
   STELLAR_NETWORK: testnet
   STELLAR_ACCOUNT: GAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWHF
-  PUBLIC_STELLAR_NETWORK: local
 
 jobs:
   build:
