@@ -101,6 +101,7 @@ The gallery contract is published to and deployed from the [Stellar Registry](ht
 ```bash
 scripts/registry.sh testnet publish      # build and publish the Wasm (add --dry-run to simulate)
 scripts/registry.sh testnet deploy       # first time: deploy the named gallery
+scripts/registry.sh testnet register C…  # or: name a gallery that is already deployed
 scripts/registry.sh testnet collection   # first time: deploy the Stellar Squares collection
 scripts/registry.sh testnet upgrade      # later: upgrade the gallery to the latest published Wasm
 scripts/registry.sh testnet id           # print the gallery's contract ID

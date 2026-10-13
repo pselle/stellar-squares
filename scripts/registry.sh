@@ -3,6 +3,7 @@
 #
 #   scripts/registry.sh <testnet|mainnet> publish      build the gallery and publish its Wasm
 #   scripts/registry.sh <testnet|mainnet> deploy       deploy a named gallery from the published Wasm
+#   scripts/registry.sh <testnet|mainnet> register <C…> name an already-deployed gallery instead
 #   scripts/registry.sh <testnet|mainnet> upgrade      upgrade the gallery to the latest published Wasm
 #   scripts/registry.sh <testnet|mainnet> collection   have the gallery deploy the Stellar Squares collection
 #   scripts/registry.sh <testnet|mainnet> id           print the gallery's contract ID
@@ -16,13 +17,9 @@ GALLERY_NAME="unverified/squares-gallery"
 # The Wasm the gallery deploys collections from
 NFT_WASM_NAME="oz/nft-standard"
 NFT_WASM_VERSION="0.7.2"
-# Price of each square. Set it in XLM; the contract takes stroops.
-#   1 XLM = 10,000,000 stroops, so 25 XLM = 250,000,000 stroops
-ITEM_PRICE_XLM=25
-ITEM_PRICE=$((ITEM_PRICE_XLM * 10000000))
 
 usage() {
-  echo "Usage: $0 <testnet|mainnet> <publish|deploy|upgrade|collection|id>" >&2
+  echo "Usage: $0 <testnet|mainnet> <publish|deploy|register|upgrade|collection|id>" >&2
   exit 1
 }
 
@@ -36,6 +33,7 @@ testnet)
   export STELLAR_NETWORK=testnet
   export STELLAR_ACCOUNT="${STELLAR_ACCOUNT:-testnet-user}"
   export STELLAR_SCAFFOLD_ENV=staging
+  item_price_xlm=100 # matches the collection already deployed on testnet
   ;;
 mainnet)
   export STELLAR_NETWORK=mainnet
@@ -43,11 +41,16 @@ mainnet)
   export STELLAR_RPC_URL="${STELLAR_RPC_URL:-https://rpc.lightsail.network/}"
   export STELLAR_ACCOUNT="${STELLAR_ACCOUNT:-gallery-mainnet}"
   export STELLAR_SCAFFOLD_ENV=production
+  item_price_xlm=25
   ;;
 *)
   usage
   ;;
 esac
+
+# Square prices are set in XLM above; the contract takes stroops.
+#   1 XLM = 10,000,000 stroops, so 25 XLM = 250,000,000 stroops
+item_price=$((item_price_xlm * 10000000))
 
 gallery_id() {
   stellar registry fetch-contract-id "$GALLERY_NAME"
@@ -73,6 +76,16 @@ deploy)
   echo "Deployed $GALLERY_NAME with ID: $(gallery_id)"
   echo "Set this ID for squares_gallery in environments.toml so the app uses it."
   ;;
+register)
+  # Give an already-deployed gallery its Registry name instead of deploying a new one
+  [ $# -ge 1 ] || { echo "Usage: $0 $network register <contract-address>" >&2; exit 1; }
+  address="$1"
+  shift
+  stellar registry register-contract \
+    --contract-name "$GALLERY_NAME" \
+    --contract-address "$address" \
+    "$@"
+  ;;
 upgrade)
   stellar registry upgrade \
     --contract-name "$GALLERY_NAME" \
@@ -85,7 +98,7 @@ collection)
     --name "Stellar Squares" \
     --symbol "SSQ" \
     --collection_size 20 \
-    --item_price "$ITEM_PRICE"
+    --item_price "$item_price"
   ;;
 id)
   gallery_id
