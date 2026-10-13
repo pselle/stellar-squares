@@ -145,6 +145,7 @@ This project uses the [Stellar Registry](https://rgstry.xyz), an on-chain regist
 - `npm run build` - Build for production
 - `npm run build:staging` - Build for staging/testnet
 - `npm run lint` - Lint code
+- `npm run test:e2e` - Run the Playwright smoke tests against testnet (build the staging clients first)
 - `npm run format` - Format code with Prettier
 
 ### Project Structure
@@ -162,6 +163,7 @@ This project uses the [Stellar Registry](https://rgstry.xyz), an on-chain regist
 │       └── providers/      # Context providers (wallet, etc.)
 ├── app-lib/                # Shared wallet, network and formatting helpers
 │   └── clients/            # Generated contract TypeScript clients (not committed)
+├── e2e/                    # Playwright smoke tests
 ├── environments.toml       # Networks, accounts and contracts per environment
 └── scripts/                # Registry publish and deploy script
 ```

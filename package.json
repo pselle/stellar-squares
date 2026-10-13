@@ -9,6 +9,7 @@
     "build:staging": "rm -rf app/dist && STELLAR_SCAFFOLD_ENV=staging stellar-scaffold build --build-clients && npm run build:staging --workspace app",
     "preview": "npm run preview --workspace app",
     "lint": "npm run lint --workspaces --if-present",
+    "test:e2e": "npm test --workspace e2e",
     "format": "prettier . --write",
     "format:check": "prettier . --check",
     "prepare": "husky"
@@ -16,7 +17,8 @@
   "workspaces": [
     "app",
     "app-lib",
-    "app-lib/clients/*"
+    "app-lib/clients/*",
+    "e2e"
   ],
   "devDependencies": {
     "husky": "^9.1.7",
