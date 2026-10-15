@@ -4,7 +4,7 @@ import { squaresGallery } from "@stellar-scaffold/app-lib/clients";
 // The collection's address is only known at runtime (the gallery deploys it),
 // so we build our own client from the generated binding package rather than
 // using the pre-bound instance exported from app-lib/clients.
-import { Client } from "nft_sequential_minting_example";
+import { Client } from "nft-collection";
 
 // Create a single NFT client instance once we have the collection address
 let nftClient: Client | null = null;

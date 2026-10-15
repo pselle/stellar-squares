@@ -26,7 +26,7 @@ app-lib/                          shared wallet/network helpers, copied from the
 app-lib/clients/                  GENERATED contract clients. Gitignored. Never edit.
 e2e/                              Playwright smoke tests
 scripts/registry.sh               publish / deploy / register / upgrade through the Registry
-environments.toml                 networks, accounts and contracts per Scaffold environment
+scaffold.yml                      Stellar Scaffold config (version 2): networks, accounts, contracts
 ```
 
 ## Commands
@@ -35,7 +35,7 @@ Run from the repo root unless noted.
 
 - `npm start`: the dev loop (`stellar scaffold watch --build-clients` plus Vite). Needs the local
   network and the one-time setup in the README's "Develop against a local network".
-- `STELLAR_SCAFFOLD_ENV=staging stellar scaffold build --build-clients`: generate clients for the
+- `stellar scaffold build --build-clients --network testnet`: generate clients for the
   contracts deployed on testnet. Do this before linting, building or running e2e tests in a fresh clone.
 - `npm run build:staging`: the command above plus the app build in staging mode. This is what CI deploys.
 - `npm run lint`, `npm run format:check`, `npm run format`.
@@ -60,15 +60,22 @@ testnet`, `stellar keys use <name>`) or `STELLAR_NETWORK` and `STELLAR_ACCOUNT`.
 - **Environment variables beat `.env` files in Vite.** A `PUBLIC_STELLAR_*` variable set in the shell
   or a workflow overrides `app/.env.staging`. This broke CI once.
 - **The clients must match the network the app runs on.** `app-lib/clients/index.ts` has contract IDs
-  for whichever `STELLAR_SCAFFOLD_ENV` was built last; the app connects using `PUBLIC_STELLAR_*`. After
+  for whichever network was built last; the app connects using `PUBLIC_STELLAR_*`. After
   a local `npm start`, rebuild the staging clients before running e2e tests.
 - **Import clients from the index.** Use `import { squaresGallery } from
 "@stellar-scaffold/app-lib/clients"`. The one exception is `app/src/hooks/useNftCollection.ts`, which
   builds its own NFT client because the collection address is only known at runtime.
 - **`app-lib/` is template code.** Prefer wrapping it in `app/` over editing it, so it stays easy to
   update from the Scaffold template.
-- **`environments.toml` is the legacy Scaffold config.** This project moves to `scaffold.yml` version 2
-  once a Scaffold CLI release supports it. Do not hand-migrate early.
+- **`scaffold.yml` is strict.** Unknown keys are errors and constructor `args` are typed YAML, not
+  shell: `$(...)` is passed through as text. Run `stellar scaffold config check` after every edit, and
+  `stellar scaffold doctor` when a build misbehaves. The network comes from `--network`, else
+  `STELLAR_NETWORK`.
+- **Testnet contracts are references, not deploys.** On testnet both contracts are `type: contract`
+  pointing at existing addresses; the gallery is deployed and upgraded through the Registry with
+  `scripts/registry.sh`, never from the dev loop.
+- **The local dev loop does not deploy a collection.** `after-deploy` only calls methods without
+  arguments, so run `npm run seed:local` after the gallery deploys.
 
 ## Contracts
 
@@ -85,7 +92,7 @@ testnet`, `stellar keys use <name>`) or `STELLAR_NETWORK` and `STELLAR_ACCOUNT`.
 
 - Testnet: the gallery is `unverified/squares-gallery` in the Registry. Look it up with
   `scripts/registry.sh testnet id`; do not hardcode the address.
-- Mainnet: not deployed. The `production` IDs in `environments.toml` are placeholders.
+- Mainnet: not deployed. `scaffold.yml` declares the network but no contract lists it.
 
 Publishing, registering, deploying and upgrading write to a public network and cannot be undone. Use
 `--dry-run` where the command supports it, and get the maintainer's go-ahead before running any of

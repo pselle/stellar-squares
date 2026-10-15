@@ -1,0 +1,61 @@
+version: 2
+
+# Stellar Scaffold configuration: https://stellarscaffold.org/docs/configuration
+project:
+  contracts-dir: contracts
+  # Generated TypeScript clients, imported as `@stellar-scaffold/app-lib/clients`.
+  # Gitignored and regenerated on every build; never edit them.
+  clients-dir: app-lib/clients
+
+# Pick a network with `--network <name>` or STELLAR_NETWORK; the default is `local`.
+networks:
+  # The Stellar Quickstart container, started automatically
+  local:
+    accounts: [me]
+
+  # Contracts here are deployed through the Stellar Registry with
+  # scripts/registry.sh, not from the dev loop, so deploys stay off.
+  testnet:
+    accounts: [testnet-user]
+
+  # Nothing is deployed to mainnet yet, so no contract lists it and a mainnet
+  # build generates no clients.
+  mainnet:
+    rpc-url: https://rpc.lightsail.network/
+    accounts: [gallery-mainnet]
+
+contracts:
+  squares-gallery:
+    type: workspace
+    source: squares-gallery
+    networks:
+      local:
+        args:
+          owner: ${account.me}
+          # Hash of `oz/nft-standard` 0.7.2 from the Stellar Registry. Upload it
+          # to the local network once; see the README.
+          nft_wasm_hash: b0b3520386c85109faee8333b41bbfbf7779e1de203b77a4a3c9c0cd48aaaee6
+          # The native XLM asset contract on the local network's passphrase
+          xlm_sac: CDMLFMKMMD7MWZP3FKUBZPVHTUEDLSX4BYGYKH4GCESXYHS3IHQ4EIG4
+      # `unverified/squares-gallery` in the Stellar Registry
+      # (`scripts/registry.sh testnet id`)
+      testnet:
+        type: contract
+        source: CB3BJK2C7QIQYUSEPJXNB3FHEV4XRYE45R5C44NEVMUUWTG3VUYZZ3XE
+
+  # Only here so the app gets a typed client for the NFT collections the gallery
+  # deploys. The gallery itself deploys collections from `oz/nft-standard`.
+  nft-collection:
+    type: workspace
+    source: nft-sequential-minting-example
+    networks:
+      local:
+        args:
+          uri: https://example.com/nft/
+          name: Example Collection
+          symbol: EXC
+          owner: ${account.me}
+      # The Stellar Squares collection the testnet gallery deployed
+      testnet:
+        type: contract
+        source: CBAGE7JPRGVLVBU6CHFSBDZBCZSOK2O3Y4WYLKQTSGUPETEHPPQ3XFEO
