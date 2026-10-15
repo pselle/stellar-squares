@@ -32,7 +32,6 @@ case "$network" in
 testnet)
   export STELLAR_NETWORK=testnet
   export STELLAR_ACCOUNT="${STELLAR_ACCOUNT:-testnet-user}"
-  export STELLAR_SCAFFOLD_ENV=staging
   item_price_xlm=100 # matches the collection already deployed on testnet
   ;;
 mainnet)
@@ -40,7 +39,6 @@ mainnet)
   export STELLAR_NETWORK_PASSPHRASE="Public Global Stellar Network ; September 2015"
   export STELLAR_RPC_URL="${STELLAR_RPC_URL:-https://rpc.lightsail.network/}"
   export STELLAR_ACCOUNT="${STELLAR_ACCOUNT:-gallery-mainnet}"
-  export STELLAR_SCAFFOLD_ENV=production
   item_price_xlm=25
   ;;
 *)
@@ -74,7 +72,7 @@ deploy)
     --nft_wasm_hash "$(stellar registry fetch-hash "$NFT_WASM_NAME" --version "$NFT_WASM_VERSION")" \
     --xlm_sac "$(stellar contract id asset --asset native)"
   echo "Deployed $GALLERY_NAME with ID: $(gallery_id)"
-  echo "Set this ID for squares_gallery in environments.toml so the app uses it."
+  echo "Set this ID as the squares-gallery source for $network in scaffold.yml so the app uses it."
   ;;
 register)
   # Give an already-deployed gallery its Registry name instead of deploying a new one

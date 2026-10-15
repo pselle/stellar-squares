@@ -36,14 +36,10 @@ jobs:
       - name: Install cargo-binstall
         uses: cargo-bins/cargo-binstall@main
       # Check for stellar-scaffold-cli binary and install if not present
-      - name: Check for stellar-scaffold binary
-        run: |
-          if ! command -v stellar-scaffold &> /dev/null; then
-            echo "stellar-scaffold not found, installing..."
-            cargo binstall stellar-scaffold-cli
-          else
-            echo "stellar-scaffold already installed. Clear cache to force reinstall."
-          fi
+      # scaffold.yml version 2 needs Scaffold 0.0.28 or later. binstall skips the
+      # download when the cached binary is already this version.
+      - name: Install stellar-scaffold
+        run: cargo binstall -y --locked stellar-scaffold-cli@0.0.28
       # The Registry macros shell out to `stellar registry` during cargo build
       - name: Check for stellar and stellar-registry binaries
         run: |
@@ -55,7 +51,7 @@ jobs:
           fi
       - run: npm ci
       - name: Build with Scaffold and build client packages
-        run: STELLAR_SCAFFOLD_ENV=staging stellar-scaffold build --build-clients 2>&1 | tee build_clients.log
+        run: stellar-scaffold build --build-clients --network testnet 2>&1 | tee build_clients.log
       - name: Check client generation summary
         run: |
           # Extract the number after "Failed: "
