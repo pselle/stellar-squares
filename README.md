@@ -68,7 +68,7 @@ npm install
 The quickest way to see the app. It uses the gallery already deployed on testnet, with no Docker and no deploys:
 
 ```bash
-STELLAR_SCAFFOLD_ENV=staging stellar scaffold build --build-clients   # generate the contract clients
+stellar scaffold build --build-clients --network testnet   # generate the contract clients
 npm exec --workspace app -- vite --mode staging
 ```
 
@@ -82,6 +82,8 @@ npm exec --workspace app -- vite --mode staging
    stellar keys generate squares-dev --network local --fund
    ```
 
+   On a freshly started network, funding can fail for a minute while Friendbot starts up. Retry with `stellar keys fund squares-dev --network local`.
+
 2. **Fetch the NFT Wasm and upload it to the local network.** The gallery deploys each collection from OpenZeppelin's `nft-standard` Wasm, and a fresh local network does not have it yet:
 
    ```bash
@@ -92,7 +94,7 @@ npm exec --workspace app -- vite --mode staging
      --network local --source-account squares-dev
    ```
 
-   The returned hash should match the `nft_wasm_hash` in `environments.toml`. Saving the file at that path also lets local contract builds find the Wasm without contacting the Registry. Repeat this step after `cargo clean` or after restarting the local network.
+   The returned hash should match the `nft_wasm_hash` in `scaffold.yml`. Saving the file at that path also lets local contract builds find the Wasm without contacting the Registry. Repeat this step after `cargo clean` or after restarting the local network.
 
 3. **Start the dev loop:**
 
@@ -100,7 +102,15 @@ npm exec --workspace app -- vite --mode staging
    npm start
    ```
 
-   This builds and deploys both contracts to the local network, has the gallery deploy a 20-square collection, generates the TypeScript clients, and serves the app. Contract changes are rebuilt and redeployed as you save.
+   This builds and deploys both contracts to the local network, generates the TypeScript clients, and serves the app. Contract changes are rebuilt and redeployed as you save.
+
+4. **Have the gallery deploy a collection.** In a second terminal, once the contracts are deployed:
+
+   ```bash
+   npm run seed:local
+   ```
+
+   This deploys a 20-square collection at 10 XLM each. Run it once per fresh deployment.
 
 Either way, the application is available at `http://localhost:5173`.
 
@@ -119,7 +129,7 @@ scripts/registry.sh testnet upgrade      # later: upgrade the gallery to the lat
 scripts/registry.sh testnet id           # print the gallery's contract ID
 ```
 
-The published version comes from `version` in `contracts/squares-gallery/Cargo.toml`, and each publish needs a higher version than the last. After the first deploy, put the contract ID in `environments.toml` so the app's generated client points at it. Upgrades keep the same ID. Use `mainnet` in place of `testnet` for production.
+The published version comes from `version` in `contracts/squares-gallery/Cargo.toml`, and each publish needs a higher version than the last. After the first deploy, set the contract ID as the gallery's `source` for that network in `scaffold.yml`, so the app's generated client points at it. Upgrades keep the same ID. Use `mainnet` in place of `testnet` for production.
 
 ### App Deployment
 
@@ -147,6 +157,7 @@ This project uses the [Stellar Registry](https://rgstry.xyz), an on-chain regist
 ### Available Scripts
 
 - `npm start` - Start the dev loop: contract watching, client generation and Vite
+- `npm run seed:local` - Have the local gallery deploy a collection
 - `npm run build` - Type-check and build the app with the settings in `app/.env`
 - `npm run build:staging` - Generate the testnet clients and build the app for testnet
 - `npm run lint` - Lint the app
@@ -171,7 +182,7 @@ This project uses the [Stellar Registry](https://rgstry.xyz), an on-chain regist
 │   └── clients/            # Generated contract TypeScript clients (not committed)
 ├── e2e/                    # Playwright smoke tests
 ├── scripts/registry.sh     # Publish, deploy and upgrade through the Stellar Registry
-├── environments.toml       # Networks, accounts and contracts per environment
+├── scaffold.yml            # Stellar Scaffold config: networks, accounts, contracts
 └── AGENTS.md               # Guidance for AI coding agents
 ```
 
